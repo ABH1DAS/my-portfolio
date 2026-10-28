@@ -1,0 +1,105 @@
+/* ==========================================================================
+   Animations, Keyframes, Thread Vector & Reduced Motion
+   ========================================================================== */
+
+/* Animated SVG Thread */
+.hero-thread-svg, .page-thread-svg, .thread-svg {
+  pointer-events: none; overflow: visible;
+}
+
+/* Typography Reveals & Parallax Drift */
+.line-mask { display: block; overflow: hidden; padding-bottom: 0.06em; will-change: transform; }
+.line-mask .line { display: block; will-change: transform, opacity; }
+.word-wrap { display: inline-block; overflow: hidden; vertical-align: bottom; margin-right: 0.3em; }
+.word-wrap .word { display: inline-block; will-change: transform, opacity; }
+
+/* Infinite Skills Marquee Keyframes */
+.marquee-animated { animation: marquee-scroll 28s linear infinite; }
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-wrapper:hover .marquee-animated { animation-play-state: paused; }
+
+/* ==========================================================================
+   Fluid Free-Flight Kinetics for Floating 3D Cards (Smooth, Minimal, Serene)
+   ========================================================================== */
+
+.depth-card:nth-child(3n + 1) .depth-card-flow {
+  animation: flight-stream-a 18s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+.depth-card:nth-child(3n + 2) .depth-card-flow {
+  animation: flight-stream-b 22s ease-in-out infinite;
+  animation-delay: var(--delay, 0.6s);
+}
+.depth-card:nth-child(3n) .depth-card-flow {
+  animation: flight-stream-c 19s ease-in-out infinite;
+  animation-delay: var(--delay, 1.2s);
+}
+
+@keyframes flight-stream-a {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  25% { transform: translate3d(8px, -6px, 6px) rotate(1.2deg); }
+  50% { transform: translate3d(-7px, 7px, -4px) rotate(-1deg); }
+  75% { transform: translate3d(5px, 6px, 5px) rotate(0.8deg); }
+  100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+}
+
+@keyframes flight-stream-b {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  28% { transform: translate3d(-7px, 8px, 6px) rotate(-1.4deg); }
+  55% { transform: translate3d(8px, -7px, 4px) rotate(1.2deg); }
+  80% { transform: translate3d(-5px, -5px, -5px) rotate(-0.8deg); }
+  100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+}
+
+@keyframes flight-stream-c {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  30% { transform: translate3d(7px, 6px, 4px) rotate(1deg); }
+  60% { transform: translate3d(-8px, -7px, 7px) rotate(-1.2deg); }
+  85% { transform: translate3d(6px, -4px, -3px) rotate(0.6deg); }
+  100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+}
+
+/* ==========================================================================
+   Motion Paused State & Reduced-Motion Accessibility Fallbacks
+   ========================================================================== */
+
+body.motion-paused .marquee-animated { animation-play-state: paused !important; }
+body.motion-paused .line-mask,
+body.motion-paused .line-mask .line,
+body.motion-paused .word-wrap .word { transform: none !important; opacity: 1 !important; }
+body.motion-paused .proj-stack { gap: 2rem !important; padding-bottom: 2rem !important; }
+body.motion-paused .proj {
+  position: static !important; transform: none !important;
+  opacity: 1 !important; box-shadow: none !important; margin-bottom: 2rem !important;
+}
+body.motion-paused .proj::before, body.motion-paused .proj::after { display: none !important; }
+body.motion-paused .hero-thread-path,
+body.motion-paused .hero-thread-glow,
+body.motion-paused .page-thread-path,
+body.motion-paused .page-thread-glow { stroke-dashoffset: 0 !important; }
+body.motion-paused .thread-tip-dot,
+body.motion-paused .page-thread-tip { display: none !important; }
+body.motion-paused .status-dot, body.motion-paused .hint-arrow { animation: none !important; }
+body.motion-paused .depth-card,
+body.motion-paused .depth-card-flow,
+body.motion-paused .depth-card-inner { animation: none !important; transform: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  .marquee-animated { animation-play-state: paused !important; }
+  .line-mask, .line-mask .line, .word-wrap .word { transform: none !important; opacity: 1 !important; }
+  .proj-stack { gap: 2rem !important; padding-bottom: 2rem !important; }
+  .proj {
+    position: static !important; transform: none !important;
+    opacity: 1 !important; box-shadow: none !important; margin-bottom: 2rem !important;
+  }
+  .proj::before, .proj::after { display: none !important; }
+  .hero-thread-path, .hero-thread-glow,
+  .page-thread-path, .page-thread-glow { stroke-dashoffset: 0 !important; }
+  .thread-tip-dot, .page-thread-tip { display: none !important; }
+  .status-dot, .hint-arrow { animation: none !important; }
+  .depth-card, .depth-card-flow, .depth-card-inner { animation: none !important; transform: none !important; }
+}
