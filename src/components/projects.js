@@ -38,8 +38,8 @@ export function renderProjects(container) {
     <section id="projects" aria-label="Selected Projects">
       <div class="sec-proximity-slot" data-proximity-heading="02 // SELECTED WORK" data-cursor=""></div>
       <h2>
-        <span class="line-mask"><span class="line">Selected</span></span>
-        <span class="line-mask"><span class="line"><span class="acc">work.</span></span></span>
+        <span class="line-mask"><span class="line" data-proximity-line="Selected" data-cursor="">Selected</span></span>
+        <span class="line-mask"><span class="line" data-proximity-line="work." data-proximity-accent="work." data-cursor=""><span class="acc">work.</span></span></span>
       </h2>
       <div class="proj-stack">
         ${cardsHtml}

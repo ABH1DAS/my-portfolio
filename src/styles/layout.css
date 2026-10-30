@@ -104,6 +104,52 @@ section {
   will-change: font-variation-settings;
 }
 
+/* Variable Proximity Section H2 Headline Lines */
+.v-variable-proximity.h2-proximity-line {
+  display: inline-block !important;
+  min-block-size: unset !important;
+  min-inline-size: unset !important;
+  inline-size: auto !important;
+  max-inline-size: 100% !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--fg-bright, #ffffff) !important;
+  font-family: "Bricolage Grotesque", var(--font-sans), sans-serif !important;
+  font-size: clamp(2.2rem, 7.5vw, 6rem) !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: -0.03em !important;
+  line-height: 0.92 !important;
+  cursor: default !important;
+  isolation: auto !important;
+}
+
+.v-variable-proximity.h2-proximity-line .v-variable-proximity__line {
+  text-align: left !important;
+  display: inline-block !important;
+  max-inline-size: 100% !important;
+  color: inherit !important;
+  white-space: nowrap !important;
+}
+
+.v-variable-proximity.h2-proximity-line .v-variable-proximity__word {
+  display: inline-block !important;
+}
+
+.v-variable-proximity.h2-proximity-line [data-proximity-letter] {
+  color: inherit;
+  display: inline-block;
+  will-change: font-variation-settings;
+}
+
+.v-variable-proximity.h2-proximity-line .v-variable-proximity__word.acc,
+.v-variable-proximity.h2-proximity-line .v-variable-proximity__word.acc [data-proximity-letter] {
+  color: var(--acc, #ff3b00) !important;
+}
+
+
 
 #top { justify-content: flex-start; padding-top: calc(14vh + env(safe-area-inset-top, 0px)); }
 #framework { min-height: auto; padding: 8vh 5vw; }

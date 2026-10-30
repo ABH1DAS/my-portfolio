@@ -39,6 +39,14 @@ function proximityWeight(distance: number, radius: number, from: number, to: num
   return from + (to - from) * p * p * (3 - 2 * p);
 }
 
+function isWordAccent(word: string, accent?: string): boolean {
+  if (!accent) return false;
+  const cleanWord = word.toLowerCase().trim().replace(/[.,!?;:]/g, '');
+  const cleanAccent = accent.toLowerCase().trim();
+  const accentWords = cleanAccent.split(/\s+/).map(w => w.replace(/[.,!?;:]/g, ''));
+  return accentWords.includes(cleanWord);
+}
+
 // ---- registry/cojeev/motion/settings.ts (inlined) ----
 const RUNTIME={cfg:{rest:false,reach:true,merge:true,hold:true,jiggleOn:true,press:true,echo:false,dots:0,grain:.08,sheen:.6,curve:1.2,lobeK:130,lobeZ:1,mergeZ:.8,arcK:40,holdK:80,pressK:170,jiggle:.35,jiggleDecay:1.6,restSpeed:1,drift:1,quality:2.5},
  tier:{pill:{amp:0,reach:3,inside:1.2,press:.02},tile:{amp:0,reach:2.4,inside:1,press:.02},nav:{amp:0,reach:1.2,inside:.5,press:.008},card:{amp:0,reach:1,inside:.4,press:.004},blob:{amp:.006,reach:3,inside:1.2,press:.03}}};
@@ -194,25 +202,50 @@ type ReferenceTextSize = "sm" | "default" | "lg";
 
 // ---- registry/cojeev/ui/variable-proximity.tsx ----
 export type VariableProximityProps = Omit<React.ComponentProps<"div">,"children"> & {
-  text: string; variant?: "weight" | "pressure"; size?: ReferenceTextSize; paused?: boolean;
-  radius?: number; fromWeight?: number; toWeight?: number;
+  text: string;
+  variant?: "weight" | "pressure";
+  size?: ReferenceTextSize;
+  paused?: boolean;
+  radius?: number;
+  fromWeight?: number;
+  toWeight?: number;
+  accentText?: string;
 };
-/** Local pointer distance changes the shipped Bricolage variable font's real wght/wdth axes. */
-function VariableProximityImpl({text,variant="weight",size="default",paused=false,radius=150,fromWeight=350,toWeight=800,className,ref,onPointerMove,onPointerLeave,...props}:VariableProximityProps) {
-  const {host:hostRef,running}=useReferenceText(paused);
-  const frame=React.useRef(0), point=React.useRef<{x:number;y:number}|null>(null);
-  const from=bounded(fromWeight,200,800,350),to=bounded(toWeight,200,800,800);
-  const paint=React.useCallback(() => {
-    hostRef.current?.querySelectorAll<HTMLElement>("[data-proximity-letter]").forEach(letter=>{
-      const rect=letter.getBoundingClientRect();
-      const distance=point.current&&running?Math.hypot(point.current.x-rect.x-rect.width/2,point.current.y-rect.y-rect.height/2):Infinity;
-      const weight=proximityWeight(distance,radius,from,to);
-      const width=variant==="pressure"?proximityWeight(distance,radius,75,100):100;
-      letter.style.fontVariationSettings=`"wght" ${weight}, "wdth" ${width}`;
-    });
-  },[hostRef,running,radius,from,to,variant]);
 
-  React.useEffect(()=>{paint();return()=>cancelAnimationFrame(frame.current);},[paint,text]);
+/** Local pointer distance changes the shipped Bricolage variable font's real wght/wdth axes. */
+function VariableProximityImpl({
+  text,
+  variant = "weight",
+  size = "default",
+  paused = false,
+  radius = 150,
+  fromWeight = 350,
+  toWeight = 800,
+  accentText,
+  className,
+  ref,
+  onPointerMove,
+  onPointerLeave,
+  ...props
+}: VariableProximityProps) {
+  const { host: hostRef, running } = useReferenceText(paused);
+  const frame = React.useRef(0), point = React.useRef<{ x: number; y: number } | null>(null);
+  const from = bounded(fromWeight, 200, 800, 350), to = bounded(toWeight, 200, 800, 800);
+
+  const paint = React.useCallback(() => {
+    hostRef.current?.querySelectorAll<HTMLElement>("[data-proximity-letter]").forEach(letter => {
+      const rect = letter.getBoundingClientRect();
+      const distance = point.current && running ? Math.hypot(point.current.x - rect.x - rect.width / 2, point.current.y - rect.y - rect.height / 2) : Infinity;
+      const weight = proximityWeight(distance, radius, from, to);
+      const width = variant === "pressure" ? proximityWeight(distance, radius, 75, 100) : 100;
+      letter.style.fontVariationSettings = `"wght" ${weight}, "wdth" ${width}`;
+    });
+  }, [hostRef, running, radius, from, to, variant]);
+
+  React.useEffect(() => {
+    paint();
+    return () => cancelAnimationFrame(frame.current);
+  }, [paint, text]);
 
   // Enhanced proximity field: observe pointer within radius buffer of the element
   React.useEffect(() => {
@@ -221,7 +254,7 @@ function VariableProximityImpl({text,variant="weight",size="default",paused=fals
     const handleWindowPointerMove = (event: PointerEvent) => {
       if (event.pointerType === "touch" || !hostRef.current) return;
       const rect = hostRef.current.getBoundingClientRect();
-      const buffer = radius + 40;
+      const buffer = radius + 60;
       if (
         event.clientX >= rect.left - buffer &&
         event.clientX <= rect.right + buffer &&
@@ -244,13 +277,62 @@ function VariableProximityImpl({text,variant="weight",size="default",paused=fals
     };
   }, [running, paint, radius, hostRef]);
 
-  return <div {...props} ref={useReferenceRef(hostRef,ref)} data-slot="variable-proximity" data-variant={variant} data-size={size} data-running={running} className={cn("v-variable-proximity",className)}
-    onPointerMove={event=>{onPointerMove?.(event);if(event.defaultPrevented||event.pointerType==="touch"||!running)return;point.current={x:event.clientX,y:event.clientY};cancelAnimationFrame(frame.current);frame.current=requestAnimationFrame(paint);}}
-    onPointerLeave={event=>{onPointerLeave?.(event);point.current=null;paint();}}>
-    <span className="v-variable-proximity__accessible">{text}</span>
-    <span aria-hidden="true" className="v-variable-proximity__line">{text.split(/(\s+)/).map((word,i)=>/^\s+$/.test(word)?word:<span className="v-variable-proximity__word" key={i}>{graphemes(word).map((char,j)=><span key={j} data-proximity-letter="" style={{fontVariationSettings:`"wght" ${from}, "wdth" ${variant==="pressure"?75:100}`}}>{char}</span>)}</span>)}</span>
-  </div>;
+  return (
+    <div
+      {...props}
+      ref={useReferenceRef(hostRef, ref)}
+      data-slot="variable-proximity"
+      data-variant={variant}
+      data-size={size}
+      data-running={running}
+      className={cn("v-variable-proximity", className)}
+      onPointerMove={event => {
+        onPointerMove?.(event);
+        if (event.defaultPrevented || event.pointerType === "touch" || !running) return;
+        point.current = { x: event.clientX, y: event.clientY };
+        cancelAnimationFrame(frame.current);
+        frame.current = requestAnimationFrame(paint);
+      }}
+      onPointerLeave={event => {
+        onPointerLeave?.(event);
+        point.current = null;
+        paint();
+      }}
+    >
+      <span className="v-variable-proximity__accessible">{text}</span>
+      <span aria-hidden="true" className="v-variable-proximity__line">
+        {text.split(/(\s+)/).map((word, i) =>
+          /^\s+$/.test(word) ? (
+            word
+          ) : (
+            <span
+              className={cn(
+                "v-variable-proximity__word",
+                isWordAccent(word, accentText) && "acc"
+              )}
+              key={i}
+            >
+              {graphemes(word).map((char, j) => (
+                <span
+                  key={j}
+                  data-proximity-letter=""
+                  style={{
+                    fontVariationSettings: `"wght" ${from}, "wdth" ${
+                      variant === "pressure" ? 75 : 100
+                    }`,
+                  }}
+                >
+                  {char}
+                </span>
+              ))}
+            </span>
+          )
+        )}
+      </span>
+    </div>
+  );
 }
+
 export function VariableProximity(props: Parameters<typeof VariableProximityImpl>[0]) {
   return (
     <>

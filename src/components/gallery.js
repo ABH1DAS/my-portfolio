@@ -29,8 +29,8 @@ export function renderGallery(container) {
         <div>
           <div class="sec-proximity-slot" data-proximity-heading="// EXTRA HOBBIES" data-cursor=""></div>
           <h2>
-            <span class="line-mask"><span class="line">Extra</span></span>
-            <span class="line-mask"><span class="line"><span class="acc">hobbies.</span></span></span>
+            <span class="line-mask"><span class="line" data-proximity-line="Extra" data-cursor="">Extra</span></span>
+            <span class="line-mask"><span class="line" data-proximity-line="hobbies." data-proximity-accent="hobbies." data-cursor=""><span class="acc">hobbies.</span></span></span>
           </h2>
         </div>
         <span class="sec-tag" style="margin:0">[DRAG TO EXPLORE ← →]</span>

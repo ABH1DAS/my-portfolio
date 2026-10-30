@@ -15,7 +15,8 @@ export function renderCapabilities(container) {
     .map((line, idx) => {
       const isSecond = idx === 1;
       const content = isSecond ? line.replace('working', '<span class="acc">working</span>') : line;
-      return `<span class="line-mask"><span class="line">${content}</span></span>`;
+      const accentAttr = isSecond ? ' data-proximity-accent="working"' : '';
+      return `<span class="line-mask"><span class="line" data-proximity-line="${line}"${accentAttr} data-cursor="">${content}</span></span>`;
     })
     .join('');
 

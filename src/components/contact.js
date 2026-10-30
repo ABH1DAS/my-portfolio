@@ -12,7 +12,8 @@ export function renderContact(container) {
     .map((line, idx) => {
       const isLast = idx === contactData.headline.length - 1;
       const content = isLast ? `<span class="acc">${line}</span>` : line;
-      return `<span class="line-mask"><span class="line">${content}</span></span>`;
+      const accentAttr = isLast ? ` data-proximity-accent="${line}"` : '';
+      return `<span class="line-mask"><span class="line" data-proximity-line="${line}"${accentAttr} data-cursor="">${content}</span></span>`;
     })
     .join('');
 

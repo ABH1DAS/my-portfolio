@@ -27,7 +27,7 @@ import { renderGallery, initGallery } from './components/gallery.js';
 import { renderAbout, initAboutAnimation } from './components/about.js';
 import { renderContact, initContact } from './components/contact.js';
 import { mountCustomCursor } from './components/ui/cursor-mount.tsx';
-import { initAllHeadingProximities } from './components/ui/heading-proximity-mount.tsx';
+import { initAllHeadingProximities, initAllHeadlineProximities } from './components/ui/heading-proximity-mount.tsx';
 
 function boot() {
   // A. Initialize Motion Preferences & React Custom Cursor
@@ -44,8 +44,9 @@ function boot() {
   renderGallery(document.getElementById('gallery-mount'));
   renderContact(document.getElementById('contact-mount'));
 
-  // C. Mount Variable Proximity on Section Headings
+  // C. Mount Variable Proximity on Section Headings & H2 Headlines
   initAllHeadingProximities();
+  initAllHeadlineProximities();
 
   // C. Initialize Component Interactivity
   initNav();
