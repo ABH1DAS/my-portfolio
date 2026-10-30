@@ -7,7 +7,6 @@ import { heroData } from '../data/site.js';
 import gsap from 'gsap';
 import { isMotionPaused, onMotionChange } from '../animations/motionPreference.js';
 import { initParticles } from './particles/Particles.js';
-import { mountTextPressure } from './ui/text-pressure-mount.tsx';
 
 export function renderHero(container) {
   if (!container) return;
@@ -37,8 +36,6 @@ export function renderHero(container) {
       </h1>
 
       <p class="sub">${heroData.subtext}</p>
-
-      <div id="hero-pressure-mount" class="hero-pressure-mount" style="position: relative; height: 110px; width: 100%; max-width: 820px; margin: 2rem 0 0.5rem; overflow: hidden;" data-cursor=""></div>
       
       <div class="marquee-wrapper" aria-hidden="true">
         <div class="marquee-track marquee-animated">
@@ -77,27 +74,6 @@ export function initHeroAnimation() {
       });
     }
   }
-
-  mountTextPressure('hero-pressure-mount', {
-    text: 'COME ALIVE',
-    flex: true,
-    alpha: false,
-    stroke: false,
-    width: true,
-    weight: true,
-    italic: true,
-    radius: 1.1,
-    smoothing: 0.3,
-    idle: 'wave',
-    idleSpeed: 0.8,
-    clickRipple: true,
-    textColor: 'var(--fg-bright, #ffffff)',
-    pressureColor: 'var(--acc, #ff3b00)',
-    strokeColor: '#ff3b00',
-    strokeWidth: 2,
-    minFontSize: 36,
-    scale: true
-  });
 
   if (isMotionPaused()) return;
 

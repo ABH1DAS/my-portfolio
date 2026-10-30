@@ -26,13 +26,10 @@ import { renderProjects, initProjectsAnimation } from './components/projects.js'
 import { renderGallery, initGallery } from './components/gallery.js';
 import { renderAbout, initAboutAnimation } from './components/about.js';
 import { renderContact, initContact } from './components/contact.js';
-import { mountCustomCursor } from './components/ui/cursor-mount.tsx';
-import { initAllHeadingProximities, initAllHeadlineProximities } from './components/ui/heading-proximity-mount.tsx';
 
 function boot() {
-  // A. Initialize Motion Preferences & React Custom Cursor
+  // A. Initialize Motion Preferences (prefers-reduced-motion + toggle)
   initMotionPreference();
-  mountCustomCursor();
 
   // B. Mount all Components to DOM
   renderNav(document.getElementById('nav-mount'));
@@ -43,10 +40,6 @@ function boot() {
   renderAbout(document.getElementById('about-mount'));
   renderGallery(document.getElementById('gallery-mount'));
   renderContact(document.getElementById('contact-mount'));
-
-  // C. Mount Variable Proximity on Section Headings & H2 Headlines
-  initAllHeadingProximities();
-  initAllHeadlineProximities();
 
   // C. Initialize Component Interactivity
   initNav();

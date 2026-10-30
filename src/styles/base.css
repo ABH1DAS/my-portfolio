@@ -1,7 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* ==========================================================================
    Base Styles, Theme Tokens & Accessibility Defaults
    ========================================================================== */
@@ -138,24 +134,3 @@ a {
   color: inherit;
   text-decoration: none;
 }
-
-/* Custom Cursor Desktop Pointer Defaults */
-@media (hover: hover) and (pointer: fine) {
-  body.custom-cursor-active,
-  body.custom-cursor-active a,
-  body.custom-cursor-active button,
-  body.custom-cursor-active [role="button"],
-  body.custom-cursor-active .folder-file-card,
-  body.custom-cursor-active .profile-card,
-  body.custom-cursor-active .cap-card,
-  body.custom-cursor-active .gallery-card,
-  body.custom-cursor-active [data-cursor] {
-    cursor: none !important;
-  }
-
-  body.custom-cursor-active input,
-  body.custom-cursor-active textarea {
-    cursor: text !important;
-  }
-}
-
