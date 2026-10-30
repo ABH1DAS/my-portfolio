@@ -149,9 +149,7 @@ a {
   body.custom-cursor-active .profile-card,
   body.custom-cursor-active .cap-card,
   body.custom-cursor-active .gallery-card,
-  body.custom-cursor-active .gallery-container,
-  body.custom-cursor-active [data-cursor],
-  body.custom-cursor-active [data-cursor-label] {
+  body.custom-cursor-active [data-cursor] {
     cursor: none !important;
   }
 

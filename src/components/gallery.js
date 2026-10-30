@@ -13,7 +13,7 @@ export function renderGallery(container) {
 
   const cardsHtml = galleryItems
     .map(item => `
-      <div class="gallery-card" data-gallery-id="${item.id}" data-cursor-label="Drag">
+      <div class="gallery-card" data-gallery-id="${item.id}">
         <div>
           <small>${item.index} // ${item.category}</small>
           <h4>${item.title}</h4>
@@ -35,7 +35,7 @@ export function renderGallery(container) {
         </div>
         <span class="sec-tag" style="margin:0">[DRAG TO EXPLORE ← →]</span>
       </div>
-      <div class="gallery-container" data-cursor-label="Drag">
+      <div class="gallery-container">
         <div class="gallery-track">
           ${cardsHtml}
         </div>
