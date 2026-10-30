@@ -26,10 +26,12 @@ import { renderProjects, initProjectsAnimation } from './components/projects.js'
 import { renderGallery, initGallery } from './components/gallery.js';
 import { renderAbout, initAboutAnimation } from './components/about.js';
 import { renderContact, initContact } from './components/contact.js';
+import { initCustomCursor } from './components/cursor/customCursor.js';
 
 function boot() {
-  // A. Initialize Motion Preferences (prefers-reduced-motion + toggle)
+  // A. Initialize Motion Preferences & Custom Cursor
   initMotionPreference();
+  initCustomCursor();
 
   // B. Mount all Components to DOM
   renderNav(document.getElementById('nav-mount'));
