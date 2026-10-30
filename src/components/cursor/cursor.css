@@ -10,7 +10,6 @@
   height: 100vh;
   pointer-events: none;
   z-index: 99999;
-  overflow: hidden;
   opacity: 0;
   transition: opacity 0.25s ease;
 }
@@ -52,11 +51,11 @@
               opacity 0.2s ease;
 }
 
-/* Hover State: Inverted and Filled with Red (No Glow) */
+/* Hover State: Inverted and Filled with Pure Red (Zero Glow) */
 .custom-cursor-ring.cursor-hover {
   width: 44px;
   height: 44px;
-  background-color: #ff2200;
+  background-color: #ff0000;
   border-color: transparent;
   mix-blend-mode: difference;
 }
