@@ -1,6 +1,6 @@
 /**
  * Custom Cursor Component (React Bits Pro Adaptation)
- * Ring and dot cursor that morphs around hovered items with elastic spring physics
+ * 17px ring and dot cursor with elastic spring and red inverted hover morph
  */
 
 import { getHoverState } from './cursorTargets.js';
@@ -35,20 +35,21 @@ export function initCustomCursor(options = {}) {
   let rafId = 0, isRunning = false, hasMoved = false;
 
   const tick = () => {
-    // 1. Spring lerp for inner dot (crisp & responsive)
+    // 1. Spring lerp for inner dot
     dotX += (mouseX - dotX) * 0.85;
     dotY += (mouseY - dotY) * 0.85;
     dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
 
-    // 2. Spring lerp for outer ring (fluid damping & elastic stretch)
+    // 2. Spring lerp for outer ring
     const dx = mouseX - ringX;
     const dy = mouseY - ringY;
-    ringX += dx * 0.2;
-    ringY += dy * 0.2;
+    ringX += dx * 0.22;
+    ringY += dy * 0.22;
 
     const vel = Math.hypot(dx, dy);
     const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-    const stretch = Math.min(vel * 0.0016, 0.2);
+    const isHovered = ring.classList.contains('cursor-hover');
+    const stretch = isHovered ? 0 : Math.min(vel * 0.0016, 0.18);
 
     ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) rotate(${angle}deg) scale(${1 + stretch}, ${1 - stretch})`;
 

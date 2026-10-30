@@ -1,6 +1,6 @@
 /* ==========================================================================
    Custom Cursor (React Bits Pro Adaptation)
-   A ring and dot cursor that morphs around hovered items with elastic spring
+   A 17px ring & dot cursor that inverts and fills red on hover (zero glow)
    ========================================================================== */
 
 .custom-cursor-container {
@@ -23,64 +23,57 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
   background-color: var(--acc, #ff4b1f);
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 10px var(--acc, #ff4b1f);
   will-change: transform;
-  transition: opacity 0.2s ease, background-color 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .custom-cursor-ring {
   position: fixed;
   top: 0;
   left: 0;
-  width: 38px;
-  height: 38px;
+  width: 17px;
+  height: 17px;
   border: 1.5px solid var(--acc, #ff4b1f);
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
-  background: rgba(255, 75, 31, 0.04);
-  box-shadow: 0 0 14px rgba(255, 75, 31, 0.16);
+  background: transparent;
   will-change: transform, width, height;
-  transition: width 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2),
-              height 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2),
-              border-color 0.25s ease,
-              background-color 0.25s ease,
-              box-shadow 0.25s ease,
+  transition: width 0.26s cubic-bezier(0.2, 0.9, 0.3, 1.2),
+              height 0.26s cubic-bezier(0.2, 0.9, 0.3, 1.2),
+              border-color 0.2s ease,
+              background-color 0.2s ease,
               opacity 0.2s ease;
 }
 
-/* Hover Morph States */
+/* Hover State: Inverted and Filled with Red (No Glow) */
 .custom-cursor-ring.cursor-hover {
-  width: 58px;
-  height: 58px;
-  background: rgba(255, 75, 31, 0.12);
-  border-color: #ffffff;
-  box-shadow: 0 0 25px rgba(255, 75, 31, 0.4), inset 0 0 12px rgba(255, 75, 31, 0.2);
+  width: 44px;
+  height: 44px;
+  background-color: #ff2200;
+  border-color: transparent;
+  mix-blend-mode: difference;
 }
 
 .custom-cursor-dot.cursor-hover {
-  background-color: #ffffff;
-  opacity: 0.85;
+  opacity: 0;
 }
 
 /* Click Active State */
 .custom-cursor-ring.cursor-active {
-  width: 26px;
-  height: 26px;
-  background: rgba(255, 75, 31, 0.35);
-  border-color: var(--acc, #ff4b1f);
+  transform: translate(-50%, -50%) scale(0.85);
 }
 
 .custom-cursor-ring.cursor-text {
-  width: 20px;
-  height: 20px;
-  opacity: 0.3;
+  width: 14px;
+  height: 14px;
+  opacity: 0.35;
 }
 
 /* Hide Default Cursor on Desktop Pointer */
@@ -104,6 +97,7 @@
 @media (hover: none) and (pointer: coarse) {
   .custom-cursor-container { display: none !important; }
 }
+
 body.motion-paused .custom-cursor-container {
   display: none !important;
 }
