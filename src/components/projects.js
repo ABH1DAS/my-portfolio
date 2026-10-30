@@ -36,7 +36,7 @@ export function renderProjects(container) {
 
   container.innerHTML = `
     <section id="projects" aria-label="Selected Projects">
-      <span class="sec-tag">02 // SELECTED WORK</span>
+      <div class="sec-proximity-slot" data-proximity-heading="02 // SELECTED WORK" data-cursor=""></div>
       <h2>
         <span class="line-mask"><span class="line">Selected</span></span>
         <span class="line-mask"><span class="line"><span class="acc">work.</span></span></span>

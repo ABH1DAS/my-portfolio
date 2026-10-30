@@ -24,7 +24,7 @@ export function renderContact(container) {
     <section id="contact" aria-label="Contact">
       <div class="contact-grid">
         <div class="contact-left">
-          <span class="sec-tag">${contactData.tag}</span>
+          <div class="sec-proximity-slot" data-proximity-heading="${contactData.tag}" data-cursor=""></div>
           <h2>${headlineHtml}</h2>
           <p class="sub" style="margin-top:1rem">${contactData.subtext}</p>
 

@@ -53,7 +53,7 @@ export function renderAbout(container) {
     <section id="about" aria-label="About Abhijeet Das">
       <div class="about-grid">
         <div class="about-left">
-          <span class="sec-tag">${aboutData.tag}</span>
+          <div class="sec-proximity-slot" data-proximity-heading="${aboutData.tag}" data-cursor=""></div>
           <h2>${headlineHtml}</h2>
           <p class="sub about-statement">${wordsHtml}</p>
           <p class="signature">${aboutData.signoff}</p>

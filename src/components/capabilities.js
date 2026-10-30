@@ -44,7 +44,7 @@ export function renderCapabilities(container) {
 
   container.innerHTML = `
     <section id="capabilities" aria-label="Capabilities">
-      <span class="sec-tag">${capabilitiesData.tag}</span>
+      <div class="sec-proximity-slot" data-proximity-heading="${capabilitiesData.tag}" data-cursor=""></div>
       <h2>${headlineHtml}</h2>
       <div class="caps">
         ${columnsHtml}

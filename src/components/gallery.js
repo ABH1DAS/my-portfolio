@@ -27,7 +27,7 @@ export function renderGallery(container) {
     <section id="gallery" aria-label="Extra Hobbies">
       <div class="gallery-header">
         <div>
-          <span class="sec-tag">// EXTRA HOBBIES</span>
+          <div class="sec-proximity-slot" data-proximity-heading="// EXTRA HOBBIES" data-cursor=""></div>
           <h2>
             <span class="line-mask"><span class="line">Extra</span></span>
             <span class="line-mask"><span class="line"><span class="acc">hobbies.</span></span></span>
