@@ -1,11 +1,12 @@
 /**
  * Hero Component
- * Clean Bold Typography & Skills Marquee
+ * Clean Bold Typography, Skills Marquee & Interactive WebGL Particles Background
  */
 
 import { heroData } from '../data/site.js';
 import gsap from 'gsap';
-import { isMotionPaused } from '../animations/motionPreference.js';
+import { isMotionPaused, onMotionChange } from '../animations/motionPreference.js';
+import { initParticles } from './particles/Particles.js';
 
 export function renderHero(container) {
   if (!container) return;
@@ -26,6 +27,8 @@ export function renderHero(container) {
 
   container.innerHTML = `
     <section id="top" aria-label="Introduction">
+      <div id="hero-particles" class="hero-particles" aria-hidden="true"></div>
+
       <span class="sec-tag">${heroData.tag}</span>
       
       <h1 class="hero-headline" aria-label="${fullHeadlineText}">
@@ -49,6 +52,29 @@ export function renderHero(container) {
 }
 
 export function initHeroAnimation() {
+  const particlesContainer = document.getElementById('hero-particles');
+  if (particlesContainer) {
+    const particles = initParticles(particlesContainer, {
+      particleColors: ['#ffffff'],
+      particleCount: 280,
+      particleSpread: 10,
+      speed: 0.1,
+      particleBaseSize: 100,
+      glow: 0.5,
+      twinkle: 0.2,
+      moveParticlesOnHover: true,
+      hoverEffect: 'parallax',
+      sizeRandomness: 0.75,
+      paused: isMotionPaused()
+    });
+
+    if (particles) {
+      onMotionChange((paused) => {
+        particles.updateSettings({ paused });
+      });
+    }
+  }
+
   if (isMotionPaused()) return;
 
   gsap.fromTo('#top .line',
