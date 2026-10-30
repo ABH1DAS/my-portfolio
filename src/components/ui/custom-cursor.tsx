@@ -27,7 +27,9 @@ type MotionDivAnimate = NonNullable<
   ComponentProps<typeof motion.div>["animate"]
 >;
 
-const DEFAULT_CURSOR_COLOR = "#ff4b1f";
+const DEFAULT_CURSOR_COLOR = "#ff4c24";
+const HOVER_FILL_COLOR = "#ff0000";
+
 const CURSOR_EASE = [0.2, 0.9, 0.3, 1.2] as const;
 
 const customCursorVariants = cva("relative select-none", {
@@ -78,14 +80,41 @@ function useCustomCursorContext() {
   return context;
 }
 
+function hexToRgba(hex: string, alpha: number) {
+  const normalized = hex.replace("#", "");
+
+  if (normalized.length !== 6) {
+    return `rgba(255, 76, 36, ${alpha})`;
+  }
+
+  const red = Number.parseInt(normalized.slice(0, 2), 16);
+  const green = Number.parseInt(normalized.slice(2, 4), 16);
+  const blue = Number.parseInt(normalized.slice(4, 6), 16);
+
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+
+interface CursorAppearanceOptions {
+  size?: number;
+  hoverSize?: number;
+  hoverColor?: string;
+  invertOnHover?: boolean;
+}
+
 function resolveCursorAppearance(
   isHovering: boolean,
-  color: string
+  color: string,
+  options?: CursorAppearanceOptions
 ): MotionDivAnimate {
+  const size = options?.size ?? 17;
+  const hoverSize = options?.hoverSize ?? 44;
+  const hoverColor = options?.hoverColor ?? HOVER_FILL_COLOR;
+  const invert = options?.invertOnHover ?? true;
+
   if (!isHovering) {
     return {
-      width: 17,
-      height: 17,
+      width: size,
+      height: size,
       borderRadius: 9999,
       backgroundColor: "transparent",
       borderColor: color,
@@ -96,13 +125,13 @@ function resolveCursorAppearance(
   }
 
   return {
-    width: 44,
-    height: 44,
+    width: hoverSize,
+    height: hoverSize,
     borderRadius: 9999,
-    backgroundColor: "#ff0000",
+    backgroundColor: hoverColor,
     borderColor: "transparent",
     borderWidth: 0,
-    mixBlendMode: "difference",
+    mixBlendMode: invert ? "difference" : "normal",
     boxShadow: "none",
   };
 }
@@ -132,8 +161,16 @@ export interface CustomCursorProps
   extends Omit<ComponentPropsWithoutRef<"div">, "children">,
     VariantProps<typeof customCursorVariants> {
   children?: ReactNode;
-  /** Cursor fill and border color. */
+  /** Cursor border color in idle state. */
   color?: string;
+  /** Hover fill color. Defaults to #ff0000. */
+  hoverColor?: string;
+  /** Idle outer circle diameter in px. Defaults to 17. */
+  size?: number;
+  /** Hover outer circle diameter in px. Defaults to 44. */
+  hoverSize?: number;
+  /** Whether to invert background content on hover. Defaults to true. */
+  invertOnHover?: boolean;
   /** Spring damping for pointer follow. */
   followDamping?: number;
   /** Spring stiffness for pointer follow. */
@@ -146,8 +183,12 @@ function CustomCursor({
   children,
   className,
   color = DEFAULT_CURSOR_COLOR,
+  hoverColor = HOVER_FILL_COLOR,
+  size = 17,
+  hoverSize = 44,
+  invertOnHover = true,
   followDamping = 22,
-  followStiffness = 180,
+  followStiffness = 150,
   followTransition,
   layout = "default",
   ...props
@@ -155,9 +196,10 @@ function CustomCursor({
   const prefersReducedMotion = useReducedMotion();
   const isCoarsePointer = useCoarsePointer();
   const [isHovering, setIsHovering] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
-  const cursorX = useMotionValue(0);
-  const cursorY = useMotionValue(0);
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
 
   const springTransition = followTransition ?? {
     damping: followDamping,
@@ -168,10 +210,6 @@ function CustomCursor({
   const springX = useSpring(cursorX, springTransition);
   const springY = useSpring(cursorY, springTransition);
 
-  // Faster spring for inner 4px dot
-  const springDotX = useSpring(cursorX, { damping: 30, stiffness: 350 });
-  const springDotY = useSpring(cursorY, { damping: 30, stiffness: 350 });
-
   const contextValue = useMemo<CustomCursorContextValue>(
     () => ({
       setIsHovering,
@@ -181,48 +219,59 @@ function CustomCursor({
 
   useEffect(() => {
     if (isCoarsePointer || prefersReducedMotion) {
+      document.body.classList.remove("custom-cursor-active");
       return;
     }
 
+    document.body.classList.add("custom-cursor-active");
+
     const handlePointerMove = (event: PointerEvent) => {
+      if (!isVisible) setIsVisible(true);
       cursorX.set(event.clientX);
       cursorY.set(event.clientY);
     };
 
-    const handlePointerOver = (event: PointerEvent) => {
-      const el = event.target as Element | null;
+    const handlePointerOver = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
       if (
-        el?.closest(
-          'a, button, input, textarea, select, [role="button"], h1, h2, h3, h4, p, li, b, small, [data-cursor], .folder-file-card, .profile-card, .depth-card, .cap-card, .proj, .gallery-card, [tabindex="0"]'
+        target?.closest(
+          '[data-cursor], a, button, input, textarea, select, [role="button"], .folder-file-card, .profile-card, .cap-card, .gallery-card, .motion-toggle, .skip-link, .channel-link'
         )
       ) {
         setIsHovering(true);
       }
     };
 
-    const handlePointerOut = (event: PointerEvent) => {
-      const related = event.relatedTarget as Element | null;
+    const handlePointerOut = (event: MouseEvent) => {
+      const related = event.relatedTarget as HTMLElement | null;
       if (
-        !related?.closest(
-          'a, button, input, textarea, select, [role="button"], h1, h2, h3, h4, p, li, b, small, [data-cursor], .folder-file-card, .profile-card, .depth-card, .cap-card, .proj, .gallery-card, [tabindex="0"]'
+        !related ||
+        !related.closest(
+          '[data-cursor], a, button, input, textarea, select, [role="button"], .folder-file-card, .profile-card, .cap-card, .gallery-card, .motion-toggle, .skip-link, .channel-link'
         )
       ) {
         setIsHovering(false);
       }
     };
 
-    window.addEventListener("pointermove", handlePointerMove, { passive: true });
-    document.addEventListener("pointerover", handlePointerOver, { passive: true });
-    document.addEventListener("pointerout", handlePointerOut, { passive: true });
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("mouseover", handlePointerOver);
+    window.addEventListener("mouseout", handlePointerOut);
 
     return () => {
+      document.body.classList.remove("custom-cursor-active");
       window.removeEventListener("pointermove", handlePointerMove);
-      document.removeEventListener("pointerover", handlePointerOver);
-      document.removeEventListener("pointerout", handlePointerOut);
+      window.removeEventListener("mouseover", handlePointerOver);
+      window.removeEventListener("mouseout", handlePointerOut);
     };
-  }, [cursorX, cursorY, isCoarsePointer, prefersReducedMotion]);
+  }, [cursorX, cursorY, isCoarsePointer, prefersReducedMotion, isVisible]);
 
-  const appearance = resolveCursorAppearance(isHovering, color);
+  const appearance = resolveCursorAppearance(isHovering, color, {
+    size,
+    hoverSize,
+    hoverColor,
+    invertOnHover,
+  });
 
   return (
     <CustomCursorContext.Provider value={contextValue}>
@@ -231,41 +280,38 @@ function CustomCursor({
         {...props}
       >
         {isCoarsePointer || prefersReducedMotion ? null : (
-          <>
-            <motion.div
-              animate={appearance}
-              aria-hidden="true"
-              className="pointer-events-none fixed top-0 left-0 z-[100]"
-              initial={false}
-              style={{
-                x: springX,
-                y: springY,
-                translateX: "-50%",
-                translateY: "-50%",
-              }}
-              transition={{
-                duration: 0.26,
-                ease: CURSOR_EASE,
-              }}
-            />
+          <motion.div
+            animate={appearance}
+            aria-hidden="true"
+            className="pointer-events-none fixed top-0 left-0 z-[100] border flex items-center justify-center"
+            initial={false}
+            style={{
+              x: springX,
+              y: springY,
+              translateX: "-50%",
+              translateY: "-50%",
+              opacity: isVisible ? 1 : 0,
+            }}
+            transition={{
+              duration: 0.375,
+              ease: CURSOR_EASE,
+            }}
+          >
             <motion.div
               animate={{
                 opacity: isHovering ? 0 : 1,
                 scale: isHovering ? 0 : 1,
               }}
               aria-hidden="true"
-              className="pointer-events-none fixed top-0 left-0 z-[101] size-1 rounded-full"
-              initial={false}
+              className="pointer-events-none rounded-full"
               style={{
-                x: springDotX,
-                y: springDotY,
+                width: 3,
+                height: 3,
                 backgroundColor: color,
-                translateX: "-50%",
-                translateY: "-50%",
               }}
               transition={{ duration: 0.2 }}
             />
-          </>
+          </motion.div>
         )}
         {children}
       </div>

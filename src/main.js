@@ -26,12 +26,12 @@ import { renderProjects, initProjectsAnimation } from './components/projects.js'
 import { renderGallery, initGallery } from './components/gallery.js';
 import { renderAbout, initAboutAnimation } from './components/about.js';
 import { renderContact, initContact } from './components/contact.js';
-import { initCustomCursor } from './components/cursor/customCursor.js';
+import { mountCustomCursor } from './components/ui/cursor-mount.tsx';
 
 function boot() {
-  // A. Initialize Motion Preferences & Custom Cursor
+  // A. Initialize Motion Preferences & React Custom Cursor
   initMotionPreference();
-  initCustomCursor();
+  mountCustomCursor();
 
   // B. Mount all Components to DOM
   renderNav(document.getElementById('nav-mount'));
