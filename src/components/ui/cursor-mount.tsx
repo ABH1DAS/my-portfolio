@@ -5,7 +5,7 @@ import { CustomCursor } from './custom-cursor';
 let cursorRoot: Root | null = null;
 
 /**
- * Mount the React CustomCursor component to the DOM.
+ * Mount the high-performance React CustomCursor component to the DOM.
  */
 export function mountCustomCursor(containerId = 'cursor-mount'): Root | null {
   if (typeof window === 'undefined') return null;
@@ -22,7 +22,18 @@ export function mountCustomCursor(containerId = 'cursor-mount'): Root | null {
     cursorRoot = createRoot(container);
   }
 
-  cursorRoot.render(<CustomCursor color="#ff4c24" hoverColor="#ff0000" size={17} hoverSize={44} invertOnHover={true} />);
+  cursorRoot.render(
+    <CustomCursor
+      color="#ff4c24"
+      hoverColor="#ff0000"
+      size={17}
+      hoverSize={48}
+      followStiffness={700}
+      followDamping={45}
+      mass={0.25}
+      invertOnHover={true}
+    />
+  );
   return cursorRoot;
 }
 

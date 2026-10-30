@@ -13,7 +13,7 @@ export function renderGallery(container) {
 
   const cardsHtml = galleryItems
     .map(item => `
-      <div class="gallery-card" data-gallery-id="${item.id}">
+      <div class="gallery-card" data-gallery-id="${item.id}" data-cursor-label="Drag">
         <div>
           <small>${item.index} // ${item.category}</small>
           <h4>${item.title}</h4>
@@ -27,15 +27,15 @@ export function renderGallery(container) {
     <section id="gallery" aria-label="Extra Hobbies">
       <div class="gallery-header">
         <div>
-          <div class="sec-proximity-slot" data-proximity-heading="// EXTRA HOBBIES" data-cursor=""></div>
+          <span class="sec-tag">// EXTRA HOBBIES</span>
           <h2>
-            <span class="line-mask"><span class="line" data-proximity-line="Extra" data-cursor="">Extra</span></span>
-            <span class="line-mask"><span class="line" data-proximity-line="hobbies." data-proximity-accent="hobbies." data-cursor=""><span class="acc">hobbies.</span></span></span>
+            <span class="line-mask"><span class="line">Extra</span></span>
+            <span class="line-mask"><span class="line"><span class="acc">hobbies.</span></span></span>
           </h2>
         </div>
         <span class="sec-tag" style="margin:0">[DRAG TO EXPLORE ← →]</span>
       </div>
-      <div class="gallery-container">
+      <div class="gallery-container" data-cursor-label="Drag">
         <div class="gallery-track">
           ${cardsHtml}
         </div>
