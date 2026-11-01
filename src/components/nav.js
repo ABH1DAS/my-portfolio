@@ -18,7 +18,7 @@ export function renderNav(container) {
   container.innerHTML = `
     <nav aria-label="Main Navigation">
       <div class="nav-brand">
-        <a href="#top" class="logo" aria-label="Abhijeet Das Home">AD</a>
+        <a href="#top" class="logo" aria-label="Abhijeet Das Home">ABHIJEET DAS</a>
       </div>
       <div class="nav-right">
         <div class="nav-links">
