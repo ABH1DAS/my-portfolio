@@ -36,7 +36,7 @@ nav {
 nav * { pointer-events: auto; }
 
 .nav-brand { display: flex; align-items: center; }
-.nav-brand .logo { font-weight: 900; letter-spacing: 0.1em; font-size: 14px; white-space: nowrap; }
+.nav-brand .logo { font-weight: 900; letter-spacing: 0.1em; font-size: 19px; white-space: nowrap; }
 
 .nav-right { display: flex; align-items: center; gap: 1.8rem; }
 .nav-links { display: flex; align-items: center; }
@@ -101,7 +101,7 @@ section {
   }
   .nav-links a { margin-left: 10px; }
   .nav-right { gap: 0.8rem; }
-  .nav-brand .logo { font-size: 11px; letter-spacing: 0.08em; }
+  .nav-brand .logo { font-size: 16px; letter-spacing: 0.08em; }
   section { padding: 12vh 5vw 10vh; }
   #top { padding-top: 16vh; }
 }
